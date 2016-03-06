@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+from six.moves import input, range
+
 def prompt_order(left, right):
     """
     Prompt the user to select between
@@ -14,8 +16,8 @@ def prompt_order(left, right):
         and the loser is the other one
     """
     while True:
-        print "{} or {}?".format(left, right)
-        val = raw_input("left/right> ")
+        print("{} or {}?".format(left, right))
+        val = input("left/right> ")
         if val == 'left':
             return left, right
         elif val == 'right':
@@ -114,7 +116,7 @@ def preference_sort(data, top_n):
     if not 0 < top_n <= len(data):
         raise ValueError("The number of elements to fetch should be in the interval [1, {}]".format(len(data)))
     output = []
-    for x in xrange(top_n):
+    for x in range(top_n):
         winner, data = preference_sort_round(data)
         output.append(winner)
     return output
@@ -132,6 +134,6 @@ if __name__ == '__main__':
         "Spend time with friends"
     ]
     top_3 = preference_sort(data, 3)
-    print "You chose to do these three things:"
+    print("You chose to do these three things:")
     for x in top_3:
-        print x
+        print(x)
