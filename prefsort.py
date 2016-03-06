@@ -28,8 +28,6 @@ def pairs(data):
     Take a list and generate pairs
     at a time.
 
-    Note: Each pair is sorted.
-
     If data has an odd number of elements,
     this yields (item, None)
 
@@ -38,21 +36,22 @@ def pairs(data):
     :returns: a generator of every pair in
         the iterable.
     """
-    #TODO: Can `i` be incremented by 2s instead?
-    #TODO: Do the tuples really need to be sorted each time?
+    #Index of the left element
     i = 0
     while True:
-        pair = data[2 * i: 2 * i + 2]
+        pair = data[i: i + 2]
         if not pair:
             break
         elif len(pair) == 1:
             yield pair[0], None
         else:
-            yield tuple(sorted(pair))
-        i += 1
+            yield tuple(pair)
+        i += 2
 
 #HACK: Make this a class so rules can be a class
 #member.
+#TODO: Don't store the objects themselves, but maybe
+# list indices
 def preference_sort_round(data, rules={}):
     """
     Do one round of Preference Sort. elements
@@ -122,6 +121,8 @@ def preference_sort(data, top_n):
     return output
 
 if __name__ == '__main__':
+    #TODO: Read from a file
+    #TODO: Argparse arguments
     data = [
         "Read a book",
         "Exercise",

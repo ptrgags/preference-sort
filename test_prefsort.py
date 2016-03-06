@@ -24,12 +24,6 @@ def test_pairs_even():
     actual = list(pairs([1, 2, 3, 4]))
     experiment(expected, actual)
 
-def test_pairs_order():
-    """Test that each pair is sorted"""
-    expected = [("A", "B"), ("C", "D")]
-    actual = list(pairs(["B", "A", "D", "C"]))
-    experiment(expected, actual)
-
 def test_round_empty():
     """Test that a round with no elements returns empty values"""
     expected = (None, [])
@@ -53,10 +47,11 @@ def test_round_simple(prompt_func):
     actual = preference_sort_round(["apple", "banana"], {})
     experiment(expected, actual)
 
+#TODO: We shouldn't be testing the order of the losers dict
 @mock.patch("prefsort.prompt_order", side_effect=always_left)
 def test_round(prompt_func):
     """Test a round with an even number of elements"""
-    expected = ("apple", ["banana", "strawberry", "orange", "raspberry", "grape"])
+    expected = ("apple", ["banana", "raspberry", "grape", "strawberry", "orange"])
     actual = preference_sort_round(["apple", "banana", "strawberry", "raspberry", "orange", "grape"])
     experiment(expected, actual)
 
@@ -76,9 +71,9 @@ def test_sort_empty():
     preference_sort(['foo', 'bar', 'baz'], 0)
 
 @mock.patch("prefsort.prompt_order", side_effect=always_left)
-def test_sort(prompt_func):
+def test_sort_full(prompt_func):
     """Test a full sort"""
-    expected = ['chicken', 'pasta', 'rice', 'salad', 'soup']
+    expected = ['soup', 'salad', 'chicken', 'rice', 'pasta']
     actual = preference_sort(['soup', 'salad', 'pasta', 'chicken', 'rice'], 5)
     experiment(expected, actual)
 
