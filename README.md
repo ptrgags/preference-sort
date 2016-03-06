@@ -1,4 +1,6 @@
 [![Build Status](https://travis-ci.org/ptrgags/preference-sort.svg?branch=master)](https://travis-ci.org/ptrgags/preference-sort)
+[![Code Climate](https://codeclimate.com/github/ptrgags/preference-sort/badges/gpa.svg)](https://codeclimate.com/github/ptrgags/preference-sort)
+[![Issue Count](https://codeclimate.com/github/ptrgags/preference-sort/badges/issue_count.svg)](https://codeclimate.com/github/ptrgags/preference-sort)
 
 # Preference Sort (2016)
 
