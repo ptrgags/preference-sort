@@ -24,7 +24,7 @@ def prompt_order(left, right):
 
 def pairs(data):
     """
-    Take an iterable and generate pairs
+    Take a list and generate pairs
     at a time.
 
     Note: Each pair is sorted.
@@ -32,8 +32,7 @@ def pairs(data):
     If data has an odd number of elements,
     this yields (item, None)
 
-    :param iterable data: The iterable to
-        process
+    :param list data: The list to process
     :rtype: generator of tuple
     :returns: a generator of every pair in
         the iterable.
