@@ -38,6 +38,7 @@ def pairs(data):
         the iterable.
     """
     #TODO: Can `i` be incremented by 2s instead?
+    #TODO: Do the tuples really need to be sorted each time?
     i = 0
     while True:
         pair = data[2 * i: 2 * i + 2]
