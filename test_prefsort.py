@@ -68,7 +68,7 @@ def test_sort_wrong_length():
     preference_sort(['foo', 'bar', 'baz'], 4)
 
 @raises(ValueError)
-def test_sort_empty(prompt_func):
+def test_sort_empty():
     """prefsort should raise an error on a top_n that's 0"""
     preference_sort(['foo', 'bar', 'baz'], 0)
 

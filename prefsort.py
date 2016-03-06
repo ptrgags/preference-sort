@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-
 def prompt_order(left, right):
     """
     Prompt the user to select between
@@ -71,8 +70,13 @@ def preference_sort_round(data, rules={}):
     :returns: (winner, losers) where winner
         is the user's top pick. losers
         is every other element. losers is not
-        sorted in any way.
+        sorted in any way. If the input list is empty,
+        returns (None, []). If the input list is of length
+        one, returns (winner, [])
     """
+    if not data:
+        return (None, [])
+
     winners = []
     losers = []
     unevaluated = data
@@ -107,8 +111,8 @@ def preference_sort(data, top_n):
         by the user's preferences.
     """
     #TODO: top_n should be the length of the list.
-    if top_n > len(data):
-        raise ValueError("There aren't {} elements in the input data!".format(top_n))
+    if not 0 < top_n <= len(data):
+        raise ValueError("The number of elements to fetch should be in the interval [1, {}]".format(len(data)))
     output = []
     for x in xrange(top_n):
         winner, data = preference_sort_round(data)
