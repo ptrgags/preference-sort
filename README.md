@@ -1,5 +1,10 @@
-# preference-sort
-Let the user decide how to sort a list. (2016)
+[![Build Status](https://travis-ci.org/ptrgags/preference-sort.svg?branch=master)](https://travis-ci.org/ptrgags/preference-sort)
+[![Code Climate](https://codeclimate.com/github/ptrgags/preference-sort/badges/gpa.svg)](https://codeclimate.com/github/ptrgags/preference-sort)
+[![Issue Count](https://codeclimate.com/github/ptrgags/preference-sort/badges/issue_count.svg)](https://codeclimate.com/github/ptrgags/preference-sort)
+
+# Preference Sort (2016)
+
+Let the user decide how to sort a list. 
 
 I've always found it hard to order long lists of items by preference/priority (e.g. "pick your favorite from these 25 items"). 
 
