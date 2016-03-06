@@ -24,62 +24,54 @@ def test_pairs_even():
     actual = list(pairs([1, 2, 3, 4]))
     experiment(expected, actual)
 
-def test_round_empty():
-    """Test that a round with no elements returns empty values"""
-    expected = (None, [])
-    actual = preference_sort_round([], {})
-    experiment(expected, actual)
-
-def test_round_single():
-    """Test a round with only one element"""
-    expected = ("apple", [])
-    actual = preference_sort_round(["apple"], {})
-    experiment(expected, actual)
-
 def always_left(a, b):
     """Pretend the user always enters 'left'"""
     return a, b
 
-@mock.patch("prefsort.prompt_order", side_effect=always_left)
-def test_round_simple(prompt_func):
-    """Test a round with two elements"""
-    expected = ("apple", ["banana"])
-    actual = preference_sort_round(["apple", "banana"], {})
-    experiment(expected, actual)
-
-#TODO: We shouldn't be testing the order of the losers dict
-@mock.patch("prefsort.prompt_order", side_effect=always_left)
-def test_round(prompt_func):
-    """Test a round with an even number of elements"""
-    expected = ("apple", ["banana", "raspberry", "grape", "strawberry", "orange"])
-    actual = preference_sort_round(["apple", "banana", "strawberry", "raspberry", "orange", "grape"])
-    experiment(expected, actual)
-
 @raises(ValueError)
 def test_sort_negative_length():
     """prefsort should raise an error on negative top_n"""
-    preference_sort(['foo', 'bar', 'baz'], -1)
+    PreferenceSort(['foo', 'bar', 'baz']).sort(-1)
 
 @raises(ValueError)
 def test_sort_wrong_length():
     """prefsort should raise an error on a top_n that's too large"""
-    preference_sort(['foo', 'bar', 'baz'], 4)
+    PreferenceSort(['foo', 'bar', 'baz']).sort(4)
 
-@raises(ValueError)
-def test_sort_empty():
-    """prefsort should raise an error on a top_n that's 0"""
-    preference_sort(['foo', 'bar', 'baz'], 0)
+def test_sort_no_data():
+    """prefsort should return an empty list if the input data is empty"""
+    expected = []
+    actual = PreferenceSort([]).sort()
+    experiment(expected, actual)
+
+@mock.patch("prefsort.prompt_order")
+def test_sort_one_item(prompt_func):
+    """prefsort should return the first element without prompting the user"""
+    expected = ['foo']
+    actual = PreferenceSort(['foo']).sort()
+    experiment(expected, actual)
+    assert not prompt_func.called
 
 @mock.patch("prefsort.prompt_order", side_effect=always_left)
 def test_sort_full(prompt_func):
     """Test a full sort"""
-    expected = ['soup', 'salad', 'chicken', 'rice', 'pasta']
-    actual = preference_sort(['soup', 'salad', 'pasta', 'chicken', 'rice'], 5)
+    ps = PreferenceSort(['soup', 'salad', 'pasta', 'chicken', 'rice'])
+    expected = ['soup', 'salad', 'pasta', 'chicken', 'rice']
+    actual = ps.sort()
     experiment(expected, actual)
 
 @mock.patch("prefsort.prompt_order", side_effect=always_left)
 def test_sort_length(prompt_func):
     """Make sure we get the right length back"""
     expected = 2
-    actual = len(preference_sort(['foo', 'bar', 'baz'], 2))
+    ps = PreferenceSort(['foo', 'bar', 'baz'])
+    actual = len(ps.sort(2))
+    experiment(expected, actual)
+
+@mock.patch("prefsort.prompt_order", side_effect=always_left)
+def test_sort_again(prompt_func):
+    """If the same sort is done again, the user should not be prompted"""
+    ps = PreferenceSort(['foo', 'bar', 'baz', 'qux', 'quux'])
+    expected = ps.sort(3)
+    actual = ps.sort(3)
     experiment(expected, actual)

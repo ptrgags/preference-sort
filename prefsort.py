@@ -48,77 +48,109 @@ def pairs(data):
             yield tuple(pair)
         i += 2
 
-#HACK: Make this a class so rules can be a class
-#member.
-#TODO: Don't store the objects themselves, but maybe
-# list indices
-def preference_sort_round(data, rules={}):
+class PreferenceSort(object):
     """
-    Do one round of Preference Sort. elements
-    are entered into a single-elimination tournament
-    and the user can decide the winner at each step.
-    The winner is returned separately from the rest of
-    the data.
-
-    Each choice is memoized in the rules dictionary so
-    the user doesn't have to enter the same choice
-    twice.
-
-    :param list(str) data: the input elements to sort
-    :param dict rules: The rules dictionary for
-        memoization. The default one works fine
-    :rtype: (str, [str])
-    :returns: (winner, losers) where winner
-        is the user's top pick. losers
-        is every other element. losers is not
-        sorted in any way. If the input list is empty,
-        returns (None, []). If the input list is of length
-        one, returns (winner, [])
+    Preference Sort Class
     """
-    if not data:
-        return (None, [])
+    def __init__(self, data):
+        self.rules = {}
+        self.data = data
 
-    winners = []
-    losers = []
-    unevaluated = data
-    while len(unevaluated) > 1:
-        for left, right in pairs(unevaluated):
-            if right is None:
-                winners.append(left)
-                continue
-            key = (left, right)
-            if key in rules:
-                winner, loser = rules[key]
-            else:
-                winner, loser = prompt_order(left, right)
-                rules[key] = (winner, loser)
-            winners.append(winner)
-            losers.append(loser)
-        unevaluated = winners
+    def sort(self, top_n=None):
+        """
+        Sort the list.
+
+        :param int top_n: instead of returning the
+            whole sorted list, return the top N elements.
+
+        :rtype: list
+        :returns: a list of all the elements, sorted
+            according to user preference.
+        """
+        # Sorting the whole list is equvalent to
+        # getting the top N elements where N is the
+        # length of this list
+        if top_n is None:
+            top_n = len(self.data)
+        return self.__top_n(top_n)
+
+    def __top_n(self, n):
+        """
+        Get the top N elements,
+        sorting partially if needed.
+
+        :param int n: the number of elements to grab
+        :rtype: list
+        :returns: a list of the top N elements.
+        """
+        if not 0 <= n <= len(self.data):
+            raise ValueError(("The number of elements to fetch should be in "
+                "the interval [1, {}]").format(len(self.data)))
+        output = []
+        data = self.data
+        for x in range(n):
+            winner, data = self.__sort_round(data)
+            output.append(winner)
+        return output
+
+    #TODO: Can self.rules store list indices instead of the
+    #strings themselves?
+    #TODO: Can we memoize winners and pop old rules.
+    def __sort_round(self, data):
+        """
+        Perform one round of Preference sort, selecting
+        the top element of the remaining element.
+
+        Elements are sorted with a single-elimination
+        tournament where the user gets to decide the winner
+        at each step.
+
+        Each choice is memoized so the user doesn't have
+        to enter the same choice twice.
+        :param list data: the data for use in this round. This is
+            a subset of self.data.
+        :rtype: (str, [str])
+        :returns: (winner, losers) where winner
+            is the user's top pick. losers
+            is every other element. losers is not
+            sorted in any way. If the input list is empty,
+            returns (None, []). If the input list is of length
+            one, returns (winner, [])
+        """
+        if not data:
+            return (None, [])
+
         winners = []
-    winner = unevaluated[0]
-    return winner, losers
+        losers = []
+        unevaluated = data
+        while len(unevaluated) > 1:
+            for left, right in pairs(unevaluated):
+                if right is None:
+                    winners.append(left)
+                    continue
+                winner, loser = self.__choose_winner(left, right)
+                winners.append(winner)
+                losers.append(loser)
+            unevaluated = winners
+            winners = []
+        winner = unevaluated[0]
+        return winner, losers
 
-def preference_sort(data, top_n):
-    """
-    Let the user sort the list, or at least
-    enough to get the top N elements.
+    def __choose_winner(self, left, right):
+        """
+        Have the user choose a winner, memoizing where possible.
 
-    :param list(str) data: input data
-    :param int top_n: return only the top N
-        elements
-    :rtype: list
-    :returns: a list of the top N elements, ordered
-        by the user's preferences.
-    """
-    #TODO: top_n should be the length of the list.
-    if not 0 < top_n <= len(data):
-        raise ValueError("The number of elements to fetch should be in the interval [1, {}]".format(len(data)))
-    output = []
-    for x in range(top_n):
-        winner, data = preference_sort_round(data)
-        output.append(winner)
-    return output
+        :param str left: left string choice
+        :param str right: right string choice
+        """
+        key = tuple(sorted((left, right)))
+        if key in self.rules:
+            return self.rules[key]
+        else:
+            # Memoize the choice
+            winner, loser = prompt_order(left, right)
+            self.rules[key] = (winner, loser)
+            return winner, loser
 
 if __name__ == '__main__':
     #TODO: Read from a file
@@ -134,7 +166,7 @@ if __name__ == '__main__':
         "Scroll through Facebook",
         "Spend time with friends"
     ]
-    top_3 = preference_sort(data, 3)
+    top_3 = PreferenceSort(data).sort(3)
     print("You chose to do these three things:")
     for x in top_3:
         print(x)
