@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import sys
 from six.moves import input, range
 
 def prompt_order(left, right):
@@ -153,20 +154,15 @@ class PreferenceSort(object):
             return winner, loser
 
 if __name__ == '__main__':
-    #TODO: Read from a file
     #TODO: Argparse arguments
-    data = [
-        "Read a book",
-        "Exercise",
-        "Work",
-        "Eat",
-        "Sleep",
-        "Program something",
-        "Play video games",
-        "Scroll through Facebook",
-        "Spend time with friends"
-    ]
-    top_3 = PreferenceSort(data).sort(3)
-    print("You chose to do these three things:")
-    for x in top_3:
-        print(x)
+    try:
+        fname = sys.argv[1]
+        with open(fname, 'rb') as f:
+            data = [line.rstrip() for line in f]
+        top_3 = PreferenceSort(data).sort(3)
+        print("You chose to do these three things:")
+        for x in top_3:
+            print(x)
+    except Exception as e:
+        print("Error: {}".format(e))
+        print("Usage: ./prefsort.py filename")

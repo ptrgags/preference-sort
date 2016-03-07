@@ -1,3 +1,10 @@
 [report]
 include =
     prefsort.py
+exclude_lines =
+    raise NotImplementedError
+    if __name__ == .__main__.:
+
+    #I'm not testing user functions
+    #that test user input
+    def prompt_order
