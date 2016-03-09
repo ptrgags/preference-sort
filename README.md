@@ -2,6 +2,7 @@
 [![Code Climate](https://codeclimate.com/github/ptrgags/preference-sort/badges/gpa.svg)](https://codeclimate.com/github/ptrgags/preference-sort)
 [![Issue Count](https://codeclimate.com/github/ptrgags/preference-sort/badges/issue_count.svg)](https://codeclimate.com/github/ptrgags/preference-sort)
 [![codecov.io](https://codecov.io/github/ptrgags/preference-sort/coverage.svg?branch=master)](https://codecov.io/github/ptrgags/preference-sort?branch=master)
+[![Codacy Badge](https://api.codacy.com/project/badge/grade/fbc775be6fb940be8056525c63ce4fc5)](https://www.codacy.com/app/ptrgags/preference-sort)
 
 # Preference Sort (2016)
 
@@ -13,4 +14,13 @@ What I end up doing is doing a tournament-style selection so I only have to pick
 
 I decided that it would be cool to automate the process, and thus, this project was born.
 
-This project also serves as a way for me to try out various tools like Travis-CI, Code Climate and Codecov and see how they work.
+This project also serves as a way for me to try out various tools like Travis-CI, Code Climate, Codecov and Codacy and see how they work.
+
+
+## Usage
+
+```
+./prefsort.py -f <filename>
+```
+
+try `prefsort.py -h` for more info.
