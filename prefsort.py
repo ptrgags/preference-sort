@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import sys
+import argparse
 from six.moves import input, range
 
 def prompt_order(left, right):
@@ -89,7 +90,7 @@ class PreferenceSort(object):
                 "the interval [1, {}]").format(len(self.data)))
         output = []
         data = self.data
-        for x in range(n):
+        for _ in range(n):
             winner, data = self.__sort_round(data)
             output.append(winner)
         return output
@@ -154,15 +155,38 @@ class PreferenceSort(object):
             return winner, loser
 
 if __name__ == '__main__':
-    #TODO: Argparse arguments
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-f", '--file', required=True, help='input data file')
+    parser.add_argument("-o", '--output', help='output data file')
+    parser.add_argument("-n", '--top-n', type=int,
+        help='Only return the top N elements from the list')
+    args = parser.parse_args()
+
+    #Handle input file
     try:
-        fname = sys.argv[1]
-        with open(fname, 'rb') as f:
+        with open(args.file, 'rb') as f:
             data = [line.rstrip() for line in f]
-        top_3 = PreferenceSort(data).sort(3)
-        print("You chose to do these three things:")
-        for x in top_3:
-            print(x)
     except Exception as e:
-        print("Error: {}".format(e))
-        print("Usage: ./prefsort.py filename")
+        print("Error opening input file: {}".format(e))
+        sys.exit(1)
+
+    #Handle output file
+    try:
+        output = open(args.output, 'wb') if args.output else sys.stdout
+    except Exception as e:
+        print("Error opening output stream: {}".format(e))
+        sys.exit(1)
+
+    #Sort data
+    try:
+        winners = PreferenceSort(data).sort(args.top_n)
+    except ValueError as e:
+        print("Error sorting list: {}".format(e))
+
+    #Output results.
+    for x in winners:
+        output.write("{}\n".format(x))
+
+    #Close output stream if not stdout.
+    if args.output:
+        output.close()
